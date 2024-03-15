@@ -18,57 +18,53 @@ interface CharProps {
   coinId: string;
 }
 function Chart({ coinId }: CharProps) {
-  const { isLoading, data } = useQuery<IHistorical[]>(
-    ["ohlcv", coinId],
-    () => fetchCoinHistory(coinId),
-    {
-      refetchInterval: 10000,
-    }
+  const { isLoading, data } = useQuery<IHistorical[]>(["ohlcv", coinId], () =>
+    fetchCoinHistory(coinId)
   );
+  const exceptData = data ?? [];
+  const chartData = exceptData?.map((i) => {
+    return {
+      x: i.time_close,
+      y: [i.open, i.high, i.low, i.close],
+    };
+  });
   return (
     <div>
       {isLoading ? (
         "Loading chart..."
       ) : (
         <ApexChart
-          type="line"
+          type="candlestick"
           series={[
             {
               name: "Price",
-              data: data?.map((price) => price.close) ?? [],
+              data:
+                data?.map((price) => ({
+                  x: new Date(price.time_close),
+                  y: [price.open, price.high, price.low, price.close],
+                })) ?? [],
             },
           ]}
           options={{
+            chart: {
+              height: 350,
+            },
             theme: {
               mode: "dark",
             },
-            chart: {
-              height: 300,
-              width: 500,
-              toolbar: {
-                show: false,
-              },
-              background: "transparent",
-            },
-            grid: { show: false },
-            stroke: {
-              curve: "smooth",
-              width: 4,
-            },
-            yaxis: {
-              show: false,
+            title: {
+              text: "CandleStick Chart",
+              align: "left",
             },
             xaxis: {
-              axisBorder: { show: false },
-              axisTicks: { show: false },
-              labels: { show: false },
-              categories: ["a", "b"],
+              type: "datetime",
             },
-            fill: {
-              type: "gradient",
-              gradient: { gradientToColors: ["blue"], stops: [0, 100] },
+            yaxis: {
+              show: true,
+              tooltip: {
+                enabled: true,
+              },
             },
-            colors: ["red"],
           }}
         />
       )}

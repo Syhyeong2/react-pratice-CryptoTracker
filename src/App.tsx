@@ -1,6 +1,10 @@
-import { createGlobalStyle } from "styled-components";
+import styled, { createGlobalStyle } from "styled-components";
 import Router from "./Router";
 import { ReactQueryDevtools } from "react-query/devtools";
+import { ThemeProvider } from "styled-components";
+import { darkTheme, lightTheme } from "./theme";
+import { useEffect, useState } from "react";
+import { stringify } from "querystring";
 
 const GlobalStyle = createGlobalStyle`
 @import url('https://fonts.googleapis.com/css2?family=Source+Sans+3:ital,wght@0,200..900;1,200..900&display=swap');
@@ -65,12 +69,26 @@ a {
 }
 `;
 
+const ThemeBtn = styled.button``;
+
 function App() {
+  const [theme, setTheme] = useState<boolean>(true);
+  const toggleTheme = () => {
+    setTheme(theme === true ? false : true);
+    localStorage.setItem("theme", String(theme));
+  };
+  useEffect(() => {
+    const nowTheme = localStorage.getItem("theme") === "false";
+    setTheme(nowTheme);
+  }, []);
   return (
     <>
-      <GlobalStyle />
-      <Router />
-      <ReactQueryDevtools initialIsOpen={true} />
+      <ThemeProvider theme={theme === true ? darkTheme : lightTheme}>
+        <ThemeBtn onClick={toggleTheme}>123</ThemeBtn>
+        <GlobalStyle />
+        <Router />
+        <ReactQueryDevtools initialIsOpen={true} />
+      </ThemeProvider>
     </>
   );
 }

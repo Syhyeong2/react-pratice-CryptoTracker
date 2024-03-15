@@ -82,6 +82,16 @@ const Tab = styled.span<{ isActive: boolean }>`
   }
 `;
 
+const HomeBtn = styled.div`
+  width: 50px;
+  height: 50px;
+`;
+
+const Img = styled.img`
+  width: 50px;
+  height: 50px;
+`;
+
 interface Params {
   coinId: string;
 }
@@ -155,10 +165,7 @@ function Coin() {
   );
   const { isLoading: tickersLoading, data: tickersData } = useQuery<PriceData>(
     ["tickers", coinId],
-    () => fetchCoinTickers(coinId),
-    {
-      refetchInterval: 5000,
-    }
+    () => fetchCoinTickers(coinId)
   );
   const loading = infoLoading || tickersLoading;
   return (
@@ -169,6 +176,16 @@ function Coin() {
         </title>
       </Helmet>
       <Header>
+        <HomeBtn>
+          <Link
+            to={{
+              pathname: `/`,
+              state: { name: infoData?.name },
+            }}
+          >
+            O
+          </Link>
+        </HomeBtn>
         <Title>
           {state?.name ? state.name : loading ? "Loading..." : infoData?.name}
         </Title>
@@ -214,7 +231,7 @@ function Coin() {
 
           <Switch>
             <Route path={`/${coinId}/price`}>
-              <Price />
+              <Price coinId={coinId} />
             </Route>
             <Route path={`/${coinId}/chart`}>
               <Chart coinId={coinId} />
