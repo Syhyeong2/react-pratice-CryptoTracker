@@ -25,7 +25,7 @@ const OverviewItem = styled.div`
 `;
 
 const OverviewPercent = styled.span<{ percent: number }>`
-  color: ${(props) => (props.percent < 0 ? "red" : "blue")};
+  color: ${(props) => (props.percent < 0 ? "#457BFF" : "#FF4545")};
   flex-direction: column;
   align-items: center;
 `;
