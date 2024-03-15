@@ -12,6 +12,8 @@ import Price from "./Price";
 import { useQuery } from "react-query";
 import { fetchCoinInfo, fetchCoinTickers } from "../api";
 import { Helmet } from "react-helmet";
+import { FaHome } from "react-icons/fa";
+import { IoMdArrowRoundBack } from "react-icons/io";
 
 const Container = styled.div`
   padding: 0px 20px;
@@ -22,11 +24,13 @@ const Container = styled.div`
 const Header = styled.header`
   height: 10vh;
   display: flex;
-  justify-content: center;
+  justify-content: space-between;
   align-items: center;
 `;
 
 const Title = styled.h1`
+  font-weight: bold;
+  margin-right: 5px;
   font-size: 48px;
   color: ${(props) => props.theme.accentColor};
 `;
@@ -39,7 +43,7 @@ const Loader = styled.span`
 const Overview = styled.div`
   display: flex;
   justify-content: space-between;
-  background-color: rgba(0, 0, 0, 0.5);
+  background-color: ${(props) => props.theme.textColor};
   padding: 10px 20px;
   border-radius: 10px;
 `;
@@ -48,6 +52,7 @@ const OverviewItem = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
+  color: ${(props) => props.theme.bgColor};
   span:first-child {
     font-size: 10px;
     font-weight: 400;
@@ -72,24 +77,20 @@ const Tab = styled.span<{ isActive: boolean }>`
   text-transform: uppercase;
   font-size: 12px;
   font-weight: 400;
-  background-color: rgba(0, 0, 0, 0.5);
+  background-color: ${(props) => props.theme.textColor};
   padding: 7px 0px;
   border-radius: 10px;
   color: ${(props) =>
-    props.isActive ? props.theme.accentColor : props.theme.textColor};
+    props.isActive ? props.theme.accentColor : props.theme.bgColor};
   a {
     display: block;
+    transition: color 0.1s ease-in;
   }
-`;
-
-const HomeBtn = styled.div`
-  width: 50px;
-  height: 50px;
-`;
-
-const Img = styled.img`
-  width: 50px;
-  height: 50px;
+  &:hover {
+    a {
+      color: ${(props) => props.theme.accentColor};
+    }
+  }
 `;
 
 interface Params {
@@ -176,19 +177,18 @@ function Coin() {
         </title>
       </Helmet>
       <Header>
-        <HomeBtn>
-          <Link
-            to={{
-              pathname: `/`,
-              state: { name: infoData?.name },
-            }}
-          >
-            O
-          </Link>
-        </HomeBtn>
+        <Link
+          to={{
+            pathname: `/`,
+            state: { name: infoData?.name },
+          }}
+        >
+          <FaHome size="30" />
+        </Link>
         <Title>
           {state?.name ? state.name : loading ? "Loading..." : infoData?.name}
         </Title>
+        <IoMdArrowRoundBack size="30" />
       </Header>
       {loading ? (
         <Loader>Loading...</Loader>

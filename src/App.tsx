@@ -4,7 +4,7 @@ import { ReactQueryDevtools } from "react-query/devtools";
 import { ThemeProvider } from "styled-components";
 import { darkTheme, lightTheme } from "./theme";
 import { useEffect, useState } from "react";
-import { stringify } from "querystring";
+import Switch from "@mui/material/Switch";
 
 const GlobalStyle = createGlobalStyle`
 @import url('https://fonts.googleapis.com/css2?family=Source+Sans+3:ital,wght@0,200..900;1,200..900&display=swap');
@@ -69,12 +69,16 @@ a {
 }
 `;
 
-const ThemeBtn = styled.button``;
+const Container = styled.div`
+  display: flex;
+  justify-content: center;
+  margin-left: 400px;
+`;
 
 function App() {
   const [theme, setTheme] = useState<boolean>(true);
-  const toggleTheme = () => {
-    setTheme(theme === true ? false : true);
+  const toggleTheme = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setTheme(event.target.checked);
     localStorage.setItem("theme", String(theme));
   };
   useEffect(() => {
@@ -84,7 +88,14 @@ function App() {
   return (
     <>
       <ThemeProvider theme={theme === true ? darkTheme : lightTheme}>
-        <ThemeBtn onClick={toggleTheme}>123</ThemeBtn>
+        <Container>
+          <Switch
+            checked={theme}
+            defaultChecked
+            color="default"
+            onChange={toggleTheme}
+          />
+        </Container>
         <GlobalStyle />
         <Router />
         <ReactQueryDevtools initialIsOpen={true} />

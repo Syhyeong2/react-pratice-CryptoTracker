@@ -1,5 +1,4 @@
 import { useQuery } from "react-query";
-import { useParams } from "react-router-dom";
 import { fetchCoinHistory } from "../api";
 import ApexChart from "react-apexcharts";
 
@@ -21,13 +20,7 @@ function Chart({ coinId }: CharProps) {
   const { isLoading, data } = useQuery<IHistorical[]>(["ohlcv", coinId], () =>
     fetchCoinHistory(coinId)
   );
-  const exceptData = data ?? [];
-  const chartData = exceptData?.map((i) => {
-    return {
-      x: i.time_close,
-      y: [i.open, i.high, i.low, i.close],
-    };
-  });
+
   return (
     <div>
       {isLoading ? (
