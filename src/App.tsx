@@ -4,7 +4,8 @@ import { ReactQueryDevtools } from "react-query/devtools";
 import { ThemeProvider } from "styled-components";
 import { darkTheme, lightTheme } from "./theme";
 import { useEffect, useState } from "react";
-import Switch from "@mui/material/Switch";
+import { useRecoilValue, useSetRecoilState } from "recoil";
+import { themeAtom } from "./routes/atoms";
 
 const GlobalStyle = createGlobalStyle`
 @import url('https://fonts.googleapis.com/css2?family=Source+Sans+3:ital,wght@0,200..900;1,200..900&display=swap');
@@ -76,26 +77,11 @@ const Container = styled.div`
 `;
 
 function App() {
-  const [theme, setTheme] = useState<boolean>(true);
-  const toggleTheme = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setTheme(event.target.checked);
-    localStorage.setItem("theme", String(theme));
-  };
-  useEffect(() => {
-    const nowTheme = localStorage.getItem("theme") === "false";
-    setTheme(nowTheme);
-  }, []);
+  const theme = useRecoilValue(themeAtom);
   return (
     <>
       <ThemeProvider theme={theme === true ? darkTheme : lightTheme}>
-        <Container>
-          <Switch
-            checked={theme}
-            defaultChecked
-            color="default"
-            onChange={toggleTheme}
-          />
-        </Container>
+        <Container></Container>
         <GlobalStyle />
         <Router />
         <ReactQueryDevtools initialIsOpen={true} />

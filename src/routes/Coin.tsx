@@ -1,10 +1,10 @@
 import {
-  Switch,
   Route,
   useLocation,
   useParams,
   Link,
   useRouteMatch,
+  Switch,
 } from "react-router-dom";
 import styled from "styled-components";
 import Chart from "./Chart";
@@ -14,6 +14,10 @@ import { fetchCoinInfo, fetchCoinTickers } from "../api";
 import { Helmet } from "react-helmet";
 import { FaHome } from "react-icons/fa";
 import { IoMdArrowRoundBack } from "react-icons/io";
+import { useRecoilValue, useSetRecoilState } from "recoil";
+import { useEffect } from "react";
+import { themeAtom } from "./atoms";
+import ThemeSwitch from "@mui/material/Switch";
 
 const Container = styled.div`
   padding: 0px 20px;
@@ -169,6 +173,16 @@ function Coin() {
     () => fetchCoinTickers(coinId)
   );
   const loading = infoLoading || tickersLoading;
+  const setterFn = useSetRecoilState(themeAtom);
+  const theme = useRecoilValue(themeAtom);
+  const toggleTheme = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setterFn(event.target.checked);
+    localStorage.setItem("theme", String(theme));
+  };
+  useEffect(() => {
+    const nowTheme = localStorage.getItem("theme") === "false";
+    setterFn(nowTheme);
+  }, []);
   return (
     <Container>
       <Helmet>
@@ -188,7 +202,12 @@ function Coin() {
         <Title>
           {state?.name ? state.name : loading ? "Loading..." : infoData?.name}
         </Title>
-        <IoMdArrowRoundBack size="30" />
+        <ThemeSwitch
+          checked={theme}
+          defaultChecked
+          color="default"
+          onChange={toggleTheme}
+        />
       </Header>
       {loading ? (
         <Loader>Loading...</Loader>
